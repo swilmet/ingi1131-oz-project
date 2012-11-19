@@ -1,0 +1,85 @@
+% \section*{Introduction}
+% For this project, we were asked to create a little game like Age of Empires. We had to implement players of different teams fighting to win the game.
+
+% In order to do that, we used several concepts we saw at the lectures and especially port objects. There are three different ones: \texttt{Home}, \texttt{Player} and \texttt{Square} that we will explain later. Also, in order to see what's happening when the game is running, we created a graphical user interface using QTk, adapted from the sample available on iCampus.
+
+We implemented all the features that were asked in the statements. All the code is split into several functors: one for each port object, the brain, the configuration containing the constants, the GUI, some utilities functions, and the \textquotedblleft{}main\textquotedblright{} (\texttt{INGI-of-Empires.oz}). There are several brains for testing purposes.
+
+\section{General Design}
+To explain the general design of the code, we will go trough the \textquotedblleft{}main function\textquotedblright{} and explain the important steps. First, we need map.
+
+\paragraph{The map}
+- The map is stored in a text file that we read and process to create a tuple \texttt{board} containing several tuples \texttt{row} that represent the lines of the map. This allows to easily know every square type.
+
+\paragraph{Team Creation}
+- To create teams, we use the function \texttt{GenerateTeams} that returns a tuple containing one record for each team. It knows how many teams to create by checking the number of homes on the map.
+Each team record contains the ID of the team (\texttt{TeamNum}), a reference to its home which will be explained next and the position of the home.
+
+\paragraph{Home}
+- When creating one team, the method creates one port object \texttt{Home} and binds it to the user interface (UI) in order to update the number of resources. The state of the \texttt{Home} contains only the number of resources. We \textquotedblleft{}repeat\textquotedblright{} all the states in a port, and the UI listens the corresponding stream to update the numbers displayed as soon as they change.
+
+\paragraph{The Graphical User Interface}
+- The next step is to create the GUI using the class \texttt{Gui} we adapted. The \texttt{init} method needs the map and the number of teams.
+
+\paragraph{The Square objects}
+- One \texttt{Square} port object is created for each square of the map. To create them, we need the map and the teams. The state contains many things which will be explained later. When \texttt{CreateAllSquares} has finished, a tuple is created like we did for the map but with port objects. Then the squares are bound to the UI, like we did for the home resources.
+
+\paragraph{Initialization of the game}
+- The initial towers and players are created. To create a new player, we first create the \texttt{Player} port object with the function \texttt{Player.create}. Then we create the brain, with \texttt{Brain.createBrain}. Finally we bind the player with its brain with the function \texttt{Player.embody}. This function calls the brain, sends the action to the player, waits that the player has finished its action, and then recall the brain, and so on (all this in a separated thread obviously).
+
+\section{Port objects}
+Now that we explained how the program gets started, we'll detail a little the three port objects used in this program.
+
+\subsection{Home}
+Its purpose is to know the amount of resources a team possesses at any time. As explained above, the state contains only the number of resources. Only a player sends messages to a home. Here are the messages:
+
+\bigskip
+\begin{tabular}{ll}
+  \texttt{getNbResources(?Res)} & \\
+  \texttt{addResources(Res)} & \\
+  \texttt{removeResources(Res ?OK)} & Removes Res if they are available.
+\end{tabular}
+
+\subsection{Player}
+The state of a player contains its current position, its bag, whether he has a weapon and whether he is dead.
+
+The messages received come only from the function \texttt{Player.embody} (i.e. come from the brain). A message has the form:
+
+\begin{center}
+\texttt{Action\#?BrainEnv\#?Dead}
+\end{center}
+
+After performing the action, we bind the two variables \texttt{BrainEnv} (the next brain environment), and \texttt{Dead} if the player died. The possible actions are those described by the brain specification available on iCampus.
+
+\subsection{Square}
+The state contains:
+\begin{itemize}
+  \item A tuple containing the number of players for each team, split into two categories: with and without a weapon;
+  \item If the square contains a home, the \texttt{Home} port object;
+  \item If the square contains a tower, the tower description, which contains the owner (the \texttt{TeamNum}) and the number of points;
+  \item A list of the \textquotedblleft{}near\textquotedblright{} towers. A near tower can kill a player;
+  \item A list of the visible towers;
+  \item A tuple containing, for each team, a list of the players currently exploiting the resource available on the square.
+\end{itemize}
+
+\bigskip
+The possible messages:
+
+\bigskip
+\begin{tabular}{ll}
+  \texttt{playerIn(...)} & \\
+  \texttt{playerOut(...)} & \\
+  \texttt{buildTower(... ?OK)} & Try to build a tower and notify the neighbours.\\
+  \texttt{weakenTower(Strength ?OK)} & If the tower was already destroyed, bind OK to false.\\
+  \texttt{towerBuilt(...)} & A tower has been built in the neighbourhood.\\
+  \texttt{towerDestoryed(...)} & \\
+  \texttt{getVisibleTowers(...)} & \\
+  \texttt{beginExploit(...)} & A player begins to exploit the resource.\\
+  \texttt{endExploit()} & \\
+  \texttt{getHomePort(?HomePort)} &
+\end{tabular}
+
+\subsection{Communication between port objects}
+Two simple protocols are used. The first one consist in sending a message and wait nothing in return, for example \texttt{playerOut()}.
+
+The second protocol used is the RMI: when a message is sent, we give an unbound variable, and we wait that it is bound. All the messages with a parameter prefixed with \textquotedblleft{}\texttt{?}\textquotedblright{} use the RMI protocol.

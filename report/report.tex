@@ -1,0 +1,149 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%----------------------------------------DOCUMENT---------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt,a4paper,oneside]{article}      % Type de document
+%\includeonly{introduction, annexes}     % Permet de compiler seulement certains sous-fichiers
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%----------------------------------------PACKAGE----------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%--------------DOCUMENT
+
+\usepackage[T1]{fontenc}                    % Correspondance clavier -> document
+\usepackage[utf8]{inputenc}                 % gestion des accents 
+
+%-------------PACKAGES
+
+%\usepackage[Lenny]{fncychap}                % beaux chapitres	
+%\usepackage{french}
+\usepackage{abstract}
+\usepackage{graphicx}                       % pour insérer des images
+\usepackage{caption}
+\usepackage{subfig}
+\usepackage[outerbars]{changebar}           % positionnement barre en marge externe
+%\usepackage{slashbox}                       % slashbox dans les tableaux
+\usepackage{makeidx}                        % Indexation du document
+\usepackage{multicol}                       % gestion plusieurs colonnes
+%\usepackage{eurosym}                        % symbole euro
+%\usepackage{ams}                            % maths avancees
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{cite}                           % citations de la bibliographie
+\usepackage{lastpage}                       % reference derniere page
+%\usepackage{a4wide}                         % utilisation de toute la page A4
+%\usepackage{openbib}                        % gestion avancée de Bibtex
+%\usepackage{minitoc}                        % table des matieres dans les chapitres
+%\usepackage{here}                           % avoir ses figures a la suite du texte
+\usepackage{lastpage}                       % avoir la derniere page
+%\usepackage{draftcopy}                     % mode brouillon
+%\usepackage{moreverb}                      % envir. verbatim suppl
+%\usepackage{fancyvrb}                      % envir. verbatim suppl
+\usepackage{listings}                       % incl. code langages info
+\usepackage{lipsum}                         % faux texte
+\usepackage{fullpage}                       % utilisation de toute la page.
+
+%-------------CONFIG
+
+%\renewcommand{\familydefault}{\sfdefault}   % police sans Sérif par défaut.
+\lstset{language=Java,                      % langage de programmation
+        basicstyle=\ttfamily,               % polyce de type machine à écrire
+        basewidth=0.51em,                   % espasement entre les mots
+        breaklines=true}                    % coupe les lignes trop longue en 2 lignes
+                                            
+%-------------PDF
+
+\usepackage[pdftex]{thumbpdf}               % vignettes sur acrobat 5.0 ou sup
+\usepackage[francais]{layout}
+%\usepackage[pdftex,                         % Paramétrage de la navigation
+ %   bookmarks         = true,               % Signets
+   % bookmarksnumbered = true,               % Signets numérotés
+  %  pdfstartview      = FitH,               % La page prend toute la largeur
+   % pdfpagelayout     = OneColumn,          % Vue par page
+   % colorlinks        = false,              % Liens en couleur
+    %urlcolor          = black,              % Couleur des liens externes
+   %pdfborder         = {0 0 0}             % Style de bordure : ici, rien
+    %]{hyperref}                             % Utilisation de HyperTeX
+
+
+\usepackage{pdfpages}                       % permet d'inclure des fichiers entiers pdf
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%----------------------------------------PAGE DE GARDE----------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%-------------DEBUT DU DOCUMENT
+
+\begin{document}
+
+%% http://en.wikibooks.org/wiki/LaTeX/Title_Creation
+\begin{titlepage}
+\begin{center}
+ 
+%-------------HAUT DE PAGE
+
+\includegraphics[width=0.15\textwidth]{images/ucl.png}
+\vfill
+\textsc{\LARGE }\\[1.2cm]
+\textsc{\Large INGI 1131 - Programming language concepts}\\[0.5cm]
+ 
+%-------------TITRE
+
+\hrulefill 
+\\[0.4cm]
+{ \huge \bfseries INGI of Empires}
+\\[0.4cm]
+\hrulefill
+\vfill
+ 
+%-------------AUTEURS
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Autors:}\\
+Léonard \textsc{Debroux}\\
+Sébastien \textsc{Wilmet}\\
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Teacher:} \\
+Prof. Peter \textsc{Van Roy} \\
+\end{flushright}
+\end{minipage}
+\vfill
+\includegraphics[width=0.20\textwidth]{images/logoingi.png}\\
+\vfill
+
+%-------------BAS DE PAGE
+
+{\large \today} 
+\end{center}
+\end{titlepage}
+
+%-------------TABLE DES MATIERES
+
+\pagenumbering{roman}
+%\tableofcontents
+%\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%----------------------------------------CHAPITRES--------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagenumbering{arabic}
+%\include{introduction}
+\include{contents}
+
+%-------------ANNEXES
+
+\clearpage
+\pagenumbering{Roman}
+\begin{appendix}
+%\include{annexes}
+\end{appendix}
+
+\end{document}
